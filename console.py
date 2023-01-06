@@ -32,8 +32,8 @@ class HBNBCommand(cmd.Cmd):
         print(self.str_re.match(r'""\"'))
         print(self.str_re.match(r'\"""'))
         '''
-        self.int_re = re.compile(r'^[0-9]+$')
-        self.float_re = re.compile(r'^[0-9]+\.[0-9]+$')
+        self.int_re = re.compile(r'^[+-]?[0-9]+$')
+        self.float_re = re.compile(r'^[+-]?[0-9]+\.[0-9]+$')
 
     def parse_args(self, line, delimiters=None, enclosings=None, esc=''):
         """Parse comma separated string of arguments"""
