@@ -13,17 +13,18 @@ class FileStorage:
     __objects = {}
     __objects_d = {}
 
-    def all(self):
-        """Returns a dictionary of all objects"""
-        return self.__objects
+    def all(self, cls=None):
+        """Returns a dictionary of all objects, and can be filtered by cls"""
+        if cls is None:
+            return self.__objects
+        return {key: val for key, val in self.__objects.items()
+                if isinstance(val, cls)}
 
     def new(self, obj):
         """Adds a new object to the dictionary of objects
         with key <obj class name>.id"""
         self.rebuild_objects_d()
         key = obj.__class__.__name__ + '.' + obj.id
-        # val = obj.to_dict()
-        # if self.__objects.get(key) is None:
         self.__objects[key] = obj
         self.__objects_d[key] = obj.to_dict()
         pass
@@ -58,6 +59,16 @@ class FileStorage:
             self.__class__.__objects_d = {}
             for key, obj in self.__objects.items():
                 self.__objects_d[key] = obj.to_dict()
+
+    def delete(self, obj=None):
+        """Deletes an object from the dictionaries of the objects"""
+        if obj is not None:
+            cls_name = obj.__class__.__name__
+            id = obj.id
+            index = '.'.join((cls_name, id))
+            if index in self.__objects.keys():
+                self.remove(index)
+        pass
 
     def remove(self, index):
         """Removes object corresponding <index> from the dictionaries of the
