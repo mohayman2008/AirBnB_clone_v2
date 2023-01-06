@@ -17,6 +17,8 @@ class FileStorage:
         """Returns a dictionary of all objects, and can be filtered by cls"""
         if cls is None:
             return self.__objects
+        if cls not in classes.values():
+            return None
         return {key: val for key, val in self.__objects.items()
                 if isinstance(val, cls)}
 
