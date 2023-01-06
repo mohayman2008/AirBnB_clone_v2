@@ -20,8 +20,22 @@ class HBNBCommand(cmd.Cmd):
             self.use_rawinput = False
         cmd.Cmd.__init__(self)
         self.fmt_re = re.compile(r'^[A-Za-z]*\.\w+(.*)$')
+        self.param_re = re.compile(r'^.+=.+$')
+        # self.str_re = re.compile(r'^".*(?<!\\)"$')
+        self.str_re = re.compile(r'^"(\\\"|[^"])*(?<!\\)"$')
+        '''
+        print(self.str_re.match(r'""'))
+        print(self.str_re.match(r'"("'))
+        print(self.str_re.match(r'"shk"'))
+        print(self.str_re.match(r'"""'))
+        print(self.str_re.match(r'"\""'))
+        print(self.str_re.match(r'""\"'))
+        print(self.str_re.match(r'\"""'))
+        '''
+        self.int_re = re.compile(r'^[0-9]+$')
+        self.float_re = re.compile(r'^[0-9]+\.[0-9]+$')
 
-    def parse_args(self, line, delimiters=None, enclosings=None):
+    def parse_args(self, line, delimiters=None, enclosings=None, esc=''):
         """Parse comma separated string of arguments"""
         if enclosings is None:
             enclosings = {"'": "'", '"': '"', '{': '}'}
@@ -41,6 +55,9 @@ class HBNBCommand(cmd.Cmd):
                 while i < n and line[i] != enclosings[char]:
                     if line[i] in delimiters and endx < begin:
                         endx = i
+                    elif line[i] in esc:
+                        if line[i + 1] in (line[i], enclosings[char]):
+                            i += 2
                     end = i
                     i += 1
                 if i < n and line[i] == enclosings[char]:
@@ -141,11 +158,34 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, line):
         '''\n\tcreate <class>:\t\tCreates a new instance of <class>\n'''
-        cls = self.get_class(line)
-        if cls is not None:
-            obj = cls()
-            obj.save()
-            print(obj.id)
+        cls_name = ''
+        args = self.parse_args(line)
+        if args:
+            cls_name = args[0]
+
+        cls = self.get_class(cls_name)
+        if cls is None:
+            return None
+        obj = cls()
+        for param in args[1:]:
+            if self.param_re.match(line) is None:
+                continue
+            name_val = param.split('=', 1)
+            attr = name_val[0]
+            val = name_val[1]
+
+            if self.str_re.match(val):
+                val_type = str
+                val = val[1:-1].replace("_", " ").replace(r'\"', r'"')
+            elif self.int_re.match(val):
+                val_type = int
+            elif self.float_re.match(val):
+                val_type = float
+            else:
+                continue
+            self.update(obj, attr, val, val_type)
+        obj.save()
+        print(obj.id)
         pass
 
     def do_all(self, line):
@@ -194,8 +234,24 @@ class HBNBCommand(cmd.Cmd):
             storage.remove(index)
         pass
 
+    def update(self, obj, attr, val, val_type=None):
+        '''Updates an attribute "attr" of an object "obj" with value "val"'''
+        attrib_old = getattr(obj, attr, None)
+
+        if val_type is not None:
+            attrib_type = val_type
+        elif attrib_old is None:
+            attrib_type = str
+        else:
+            attrib_type = type(attrib_old)
+        if attrib_type not in [str, int, float]:
+            return None
+        setattr(obj, attr, attrib_type(val))
+        obj.save()
+        pass
+
     def do_update(self, line):
-        '''Command processor for command "show"'''
+        '''Command processor for command "update"'''
         args = (',').join(line.split(', ')).split(',')
         args = args[0].split() + args[1:]
         index = self.get_index(args)
@@ -220,6 +276,8 @@ class HBNBCommand(cmd.Cmd):
                     return None
                 val = line[idx1:idx2]
             obj = storage.all()[index]
+            self.update(obj, attr, val)
+            """
             attrib_old = getattr(obj, attr, None)
             if attrib_old is None:
                 attrib_type = str
@@ -229,6 +287,7 @@ class HBNBCommand(cmd.Cmd):
                 return None
             setattr(obj, attr, attrib_type(val))
             obj.save()
+            """
         pass
 
     def update_from_dict(self, cls_name, id, attr_dict):
@@ -242,6 +301,7 @@ class HBNBCommand(cmd.Cmd):
             print('** attribute name missing **')
             return None
 
+        obj = storage.all()[index]
         for update in updates:
             key_val = update.strip().split(":")
             if not update or key_val[0] == '':
@@ -253,7 +313,8 @@ class HBNBCommand(cmd.Cmd):
 
             name = key_val[0].strip().strip('\'"')
             value = key_val[1].strip().strip('\'"')
-            self.do_update(f'{cls_name} {id} {name} "{value}"')
+            self.update(obj, name, value)
+            # self.do_update(f'{cls_name} {id} {name} "{value}"')
 
     def help_all(self):
         """Help function for do_show()"""

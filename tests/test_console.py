@@ -111,8 +111,30 @@ class TestConsole(unittest.TestCase):
 
     def test_create(self):
         """Tests for <create> command"""
-        self.remove_json()
-
+        invalids = (r'aa="""', r'aa=""""', r'aa="\"""', r'aa="a1""', r"aa=''",
+                    r'aa="\"', r'aa=\""', r'aa="\\"', r'aa==""', r'aa=xx',
+                    r'aa="xx', r'aa=xx"', r'aa=1a1', r'aa=11a',  r'aa=a11',
+                    r'aa=q.1', r'aa=1q.1', r'aa=q1.1', r'aa=1q2.1',
+                    r'aa=0.z', r'aa=0.1z', r'aa=0.z1', r'aa=0.0z1',
+                    r'aa=0..0')
+        params = [r'a0="="', r'a1="\""', r'a2="\\""', r'a3="\"\""', r'a4=""',
+                  r'a5="\"abc\""', r'a6="abc"', r'a7="abc_def"', r'a8="aa_"',
+                  r'a9="abc_=_\"def\"_&_!\@#$%^&*&()_+=-"',
+                  r'b0=0', r'b1=000', r'b2=01', r'b3=123456789054656',
+                  r'c0=0.0', r'c1=000.0', r'c2=0.000', r'c3=00.00',
+                  r'c4=01.10', r'c5=0.9', r'c6=89.0', r'c7=12345.09876',
+                  r'c8=123456789054656.123456789054656']
+        outputs = [("a0", r'=', str), ("a1", r'"', str), ("a2", r'\"', str),
+                   ("a3", r'""', str), ("a4", r'', str),
+                   ("a5", r'"abc"', str), ("a6", r'abc', str),
+                   ("a7", r'abc def', str), ("a8", r'aa ', str),
+                   ("a9", r'abc = "def" & !\@#$%^&*&() +=-', str),
+                   ("b0", 0, int), ("b1", 0, int), ("b2", 1, int),
+                   ("b3", 123456789054656, int),
+                   ("c0", 0.0, float), ("c1", 0.0, float), ("c2", 0.0, float),
+                   ("c3", 0.0, float), ("c4", 1.1, float), ("c5", 0.9, float),
+                   ("c6", 89.0, float), ("c7", 12345.09876, float),
+                   ("c8", 123456789054656.123456789054656, float)]
         for cls_name, cls in classes.items():
             self.remove_json()
 
@@ -123,6 +145,23 @@ class TestConsole(unittest.TestCase):
             sys.stdout = StringIO()
             self.cmd.do_create(cls_name)
             ids.append(sys.stdout.getvalue()[:-1])
+
+            for invalid in invalids:
+                self.execute(f'create {cls_name} {invalid}')
+                id = sys.stdout.getvalue()[:-1]
+                ids.append(id)
+                obj = storage.all()['.'.join((cls_name, id))]
+                self.assertIsNone(getattr(obj, "aa", None))
+
+            self.execute(f'create {cls_name} {" ".join(params)}')
+            id = sys.stdout.getvalue()[:-1]
+            ids.append(id)
+            obj = storage.all()['.'.join((cls_name, id))]
+            for attr, val, val_type in outputs:
+                value = getattr(obj, attr, None)
+                self.assertIsNotNone(value)
+                self.assertIsInstance(value, val_type)
+                self.assertEqual(value, val)
 
             for id in ids:
                 index = '.'.join((cls_name, id))
