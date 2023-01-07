@@ -14,7 +14,7 @@ class State(BaseModel, Base):
 
     __tablename__ = 'states'
     if storage_type == 'db':
-        name = Column(String(128), nullable=False)
+        name = Column(String(128), nullable=False, default='')
         cities = relationship('City', backref='state',
                               cascade='all, delete, delete-orphan')
     else:
@@ -33,6 +33,13 @@ class State(BaseModel, Base):
                 if city.state_id == self.id:
                     related_cities.append(city)
             return related_cities
+
+    # def __init__(self):
+    #     '''Constructor'''
+    #     if storage_type == 'db':
+    #         name = getattr(self, "name", None)
+    #         if name is None:
+    #             name = 'DEFAULT'
 
     # __tablename__ = 'states'
     # if storage_type == "db":
