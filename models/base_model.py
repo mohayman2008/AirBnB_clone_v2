@@ -71,13 +71,21 @@ class BaseModel:
 
     def to_dict(self):
         """Returns a dictionary representation of the object"""
-        dictionary = dict(self.__dict__)
-        dictionary["__class__"] = self.__class__.__name__
-        dictionary["created_at"] = self.created_at.isoformat()
-        dictionary["updated_at"] = self.updated_at.isoformat()
-        if '_sa_instance_state' in dictionary.keys():
-            del (dictionary['_sa_instance_state'])
-        return dictionary
+        dct = self.__dict__.copy()
+        dct['__class__'] = self.__class__.__name__
+        for k in dct:
+            if type(dct[k]) is datetime:
+                dct[k] = dct[k].isoformat()
+        if '_sa_instance_state' in dct.keys():
+            del(dct['_sa_instance_state'])
+        return dct
+        # dictionary = dict(self.__dict__)
+        # dictionary["__class__"] = self.__class__.__name__
+        # dictionary["created_at"] = self.created_at.isoformat()
+        # dictionary["updated_at"] = self.updated_at.isoformat()
+        # if '_sa_instance_state' in dictionary.keys():
+        #     del (dictionary['_sa_instance_state'])
+        # return dictionary
 
     def delete(self):
         """Deletes the object from storage"""

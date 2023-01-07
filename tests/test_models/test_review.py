@@ -1,15 +1,36 @@
 #!/usr/bin/python3
-"""Test module for Review class"""
-
-import unittest
-
-from . import test_base_model
+""" """
+from tests.test_models.test_base_model import test_basemodel
 from models.review import Review
+import os
 
 
-class TestReview(test_base_model.TestBaseModel):
-    """Tests for Review class"""
+class test_review(test_basemodel):
+    """ review test class"""
 
-    TestClass = Review
-    class_name = "Review"
-    attributes = [("place_id", str), ("user_id", str), ("text", str)]
+    def __init__(self, *args, **kwargs):
+        """ review class init"""
+        super().__init__(*args, **kwargs)
+        self.name = "Review"
+        self.value = Review
+
+    def test_place_id(self):
+        """ testing review place_id attr"""
+        new = self.value()
+        self.assertEqual(type(new.place_id), str if
+                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                         type(None))
+
+    def test_user_id(self):
+        """ testing review user_id attr"""
+        new = self.value()
+        self.assertEqual(type(new.user_id), str if
+                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                         type(None))
+
+    def test_text(self):
+        """ testing review text attr"""
+        new = self.value()
+        self.assertEqual(type(new.text), str if
+                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                         type(None))

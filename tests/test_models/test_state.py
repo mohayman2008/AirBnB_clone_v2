@@ -1,15 +1,22 @@
 #!/usr/bin/python3
-"""Test module for State class"""
-
-import unittest
-
-from . import test_base_model
+""" """
+from tests.test_models.test_base_model import test_basemodel
 from models.state import State
+import os
 
 
-class TestState(test_base_model.TestBaseModel):
-    """Tests for State class"""
+class test_state(test_basemodel):
+    """ states test class"""
 
-    TestClass = State
-    class_name = "State"
-    attributes = [("name", str)]
+    def __init__(self, *args, **kwargs):
+        """ state test class init"""
+        super().__init__(*args, **kwargs)
+        self.name = "State"
+        self.value = State
+
+    def test_name3(self):
+        """ testing state name attr"""
+        new = self.value()
+        self.assertEqual(type(new.name), str if
+                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                         type(None))
