@@ -5,3 +5,5 @@ main.py
 style.sh
 run_tests
 test
+extra
+*(backup)*

@@ -11,7 +11,7 @@ class FileStorage:
     """Class for managing file system storage"""
     __file_path = "data.json"
     __objects = {}
-    __objects_d = {}
+    # __objects_d = {}
 
     def all(self, cls=None):
         """Returns a dictionary of all objects, and can be filtered by cls"""
@@ -25,17 +25,20 @@ class FileStorage:
     def new(self, obj):
         """Adds a new object to the dictionary of objects
         with key <obj class name>.id"""
-        self.rebuild_objects_d()
+        # self.rebuild_objects_d()
         key = obj.__class__.__name__ + '.' + obj.id
         self.__objects[key] = obj
-        self.__objects_d[key] = obj.to_dict()
+        # self.__objects_d[key] = obj.to_dict()
         pass
 
     def save(self):
         """Serializes and saves objects to disk in JSON format"""
-        self.rebuild_objects_d()
+        # self.rebuild_objects_d()
         with open(self.__file_path, 'w', encoding='utf-8') as f:
-            json.dump(self.__objects_d, f)
+            objects_d = {}
+            for key, obj in self.__objects.items():
+                objects_d[key] = obj.to_dict()
+            json.dump(objects_d, f)
             # json.dump(self.__objects_d, f, ensure_ascii=False)
         pass
 
@@ -43,12 +46,12 @@ class FileStorage:
         """Loads the saved JSON file and deserializes the objects
         to the objects dictionary"""
         self.__class__.__objects = {}
-        self.__class__.__objects_d = {}
+        # self.__class__.__objects_d = {}
         try:
             with open(self.__file_path, 'r', encoding='utf-8') as f:
-                self.__class__.__objects_d = json.load(f)
+                objects_d = json.load(f)
 
-            for key, attributes in self.__objects_d.items():
+            for key, attributes in objects_d.items():
                 obj = classes[attributes["__class__"]](**attributes)
                 self.__objects[key] = obj
         except (FileNotFoundError, Exception):
@@ -70,13 +73,13 @@ class FileStorage:
             index = '.'.join((cls_name, id))
             if index in self.__objects.keys():
                 del self.__objects[index]
-                del self.__objects_d[index]
+                # del self.__objects_d[index]
         pass
 
     def remove(self, index):
         """Removes object corresponding <index> from the dictionaries of the
         objects"""
         del self.__objects[index]
-        del self.__objects_d[index]
+        # del self.__objects_d[index]
         self.save()
     pass

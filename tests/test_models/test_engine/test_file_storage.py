@@ -34,7 +34,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn("_FileStorage__objects", dir(FileStorage))
         self.assertIsInstance(FileStorage._FileStorage__objects, dict)
         # For my own implementation
-        self.assertIsInstance(FileStorage._FileStorage__objects_d, dict)
+        # self.assertIsInstance(FileStorage._FileStorage__objects_d, dict)
         self.assertIsInstance(FileStorage._FileStorage__file_path, str)
         self.assertEqual(FileStorage._FileStorage__file_path[-5:], '.json')
 
@@ -52,13 +52,13 @@ class TestFileStorage(unittest.TestCase):
             index = f'{cls.__name__}.{obj.id}'
             self.assertIn(index, self.storage.all().keys())
             self.assertIn(index, FileStorage._FileStorage__objects.keys())
-            self.assertIn(index, FileStorage._FileStorage__objects_d.keys())
+            # self.assertIn(index, FileStorage._FileStorage__objects_d.keys())
 
             self.assertIs(self.storage.all()[index], obj)
             self.assertIs(FileStorage._FileStorage__objects[index], obj)
 
-            self.assertEqual(FileStorage._FileStorage__objects_d[index],
-                             obj.to_dict())
+            # self.assertEqual(FileStorage._FileStorage__objects_d[index],
+            #                  obj.to_dict())
         pass
 
     def test_save_reload(self):
@@ -66,26 +66,26 @@ class TestFileStorage(unittest.TestCase):
         self.remove_json()
 
         self.assertEqual(FileStorage._FileStorage__objects, {})
-        self.assertEqual(FileStorage._FileStorage__objects_d, {})
+        # self.assertEqual(FileStorage._FileStorage__objects_d, {})
 
         for name, cls in classes.items():
             obj = cls()
             obj.save()
 
             FileStorage._FileStorage__objects = {}
-            FileStorage._FileStorage__objects_d = {}
+            # FileStorage._FileStorage__objects_d = {}
             self.storage.reload()
 
             index = f'{cls.__name__}.{obj.id}'
             self.assertIn(index, self.storage.all().keys())
-            self.assertIn(index, FileStorage._FileStorage__objects_d.keys())
+            # self.assertIn(index, FileStorage._FileStorage__objects_d.keys())
             self.assertIn(index, FileStorage._FileStorage__objects.keys())
 
             self.assertIsNot(self.storage.all()[index], obj)
             self.assertIsNot(FileStorage._FileStorage__objects[index], obj)
 
-            self.assertEqual(FileStorage._FileStorage__objects_d[index],
-                             obj.to_dict())
+            # self.assertEqual(FileStorage._FileStorage__objects_d[index],
+            #                  obj.to_dict())
             self.remove_json()
         pass
     pass
