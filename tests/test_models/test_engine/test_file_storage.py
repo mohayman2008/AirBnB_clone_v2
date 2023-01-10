@@ -69,7 +69,7 @@ class TestFileStorage(unittest.TestCase):
         """
         self.storage.save()
         Root = os.path.dirname(os.path.abspath("console.py"))
-        path = os.path.join(Root, "data.json")
+        path = os.path.join(Root, self.storage._FileStorage__file_path)
         with open(path, 'r') as f:
             lines = f.readlines()
         try:
