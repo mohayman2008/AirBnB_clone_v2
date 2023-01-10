@@ -43,7 +43,7 @@ class DBStorage:
         if cls is None:
             cls_list = classes.values()
         elif cls not in classes.values():
-            return None
+            return {}
         else:
             cls_list = [cls]
 

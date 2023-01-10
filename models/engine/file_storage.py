@@ -18,7 +18,7 @@ class FileStorage:
         if cls is None:
             return self.__objects
         if cls not in classes.values():
-            return None
+            return {}
         return {key: val for key, val in self.__objects.items()
                 if isinstance(val, cls)}
 

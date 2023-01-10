@@ -14,6 +14,6 @@ class Amenity(BaseModel, Base):
     __tablename__ = 'amenities'
     name = ""
     if storage_type == 'db':
-        name = Column(String(128), nullable=False, default='')
+        name = Column(String(128), nullable=False)
         place_amenities = relationship('Place', secondary='place_amenity')
     pass

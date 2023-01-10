@@ -19,9 +19,8 @@ class City(BaseModel, Base):
     name = ''
     state_id = ''
     if storage_type == 'db':
-        name = Column(String(128), nullable=False, default='')
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False,
-                          default='')
+        name = Column(String(128), nullable=False)
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
         state = relationship('State', back_populates='cities')
         places = relationship('Place', back_populates='cities',
                               cascade='all, delete, delete-orphan')
