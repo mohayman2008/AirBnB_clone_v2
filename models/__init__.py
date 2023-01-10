@@ -18,3 +18,11 @@ storage.reload()
 
 __all__ = ["base_model", "amenity", "city", "place", "review", "state",
            "user", "engine"]
+from .base_model import BaseModel
+from .amenity import Amenity
+from .city import City
+from .place import Place
+from .review import Review
+from .state import State
+from .user import User
+__all__ += ["User", "State", "City", "Amenity", "Place", "Review", "storage"]

@@ -4,6 +4,8 @@ import cmd
 import re
 import sys
 
+# from sqlalchemy.orm.attributes import InstrumentedAttribute as IA
+
 from models import engine, storage
 classes = engine.classes
 
@@ -20,18 +22,9 @@ class HBNBCommand(cmd.Cmd):
             self.use_rawinput = False
         cmd.Cmd.__init__(self)
         self.fmt_re = re.compile(r'^[A-Za-z]*\.\w+(.*)$')
+
         self.param_re = re.compile(r'^.+=.+$')
-        # self.str_re = re.compile(r'^".*(?<!\\)"$')
         self.str_re = re.compile(r'^"(\\\"|[^"])*(?<!\\)"$')
-        '''
-        print(self.str_re.match(r'""'))
-        print(self.str_re.match(r'"("'))
-        print(self.str_re.match(r'"shk"'))
-        print(self.str_re.match(r'"""'))
-        print(self.str_re.match(r'"\""'))
-        print(self.str_re.match(r'""\"'))
-        print(self.str_re.match(r'\"""'))
-        '''
         self.int_re = re.compile(r'^[+-]?[0-9]+$')
         self.float_re = re.compile(r'^[+-]?[0-9]+\.[0-9]+$')
 
@@ -151,19 +144,18 @@ class HBNBCommand(cmd.Cmd):
             return None
 
         index = '.'.join(args[:2])
-        if index in storage.all():
+        if index in storage.all(cls):
             return index
         print('** no instance found **')
         return None
 
     def do_create(self, line):
         '''\n\tcreate <class>:\t\tCreates a new instance of <class>\n'''
-        cls_name = ''
-        args = self.parse_args(line)
-        if args:
-            cls_name = args[0]
+        args = self.parse_args(line, delimiters=' \r\n\t')
+        if not args:
+            args.append('')
 
-        cls = self.get_class(cls_name)
+        cls = self.get_class(args[0])
         if cls is None:
             return None
         obj = cls()
@@ -190,17 +182,17 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         '''Command processor for command "all"'''
-        name = ''
         if line:
             cls = self.get_class(line)
             if cls:
-                name = cls.__name__
+                objects = storage.all(cls).values()
             else:
                 return None
+        else:
+            objects = storage.all().values()
         all_list = []
-        for obj in storage.all().values():
-            if not name or name == obj.__class__.__name__:
-                all_list.append(str(obj))
+        for obj in objects:
+            all_list.append(str(obj))
         print(all_list)
         pass
 
@@ -210,20 +202,16 @@ class HBNBCommand(cmd.Cmd):
         index = self.get_index(args)
 
         if index is not None:
-            print(storage.all()[index])
+            cls = classes[args[0]]
+            print(storage.all(cls)[index])
         pass
 
     def do_count(self, line):
-        """ retrieve the number of instances of a class """
+        """Retrieve the number of instances of a class"""
         cls = self.get_class(line)
         if not cls:
             return None
-
-        count = 0
-        for obj in storage.all().values():
-            if isinstance(obj, cls):
-                count = count + 1
-        print(count)
+        print(len(storage.all(cls).keys()))
 
     def do_destroy(self, line):
         '''Command processor for command "destroy"'''
@@ -231,7 +219,10 @@ class HBNBCommand(cmd.Cmd):
         index = self.get_index(args)
 
         if index is not None:
-            storage.remove(index)
+            cls = classes[index.split('.', 1)[0]]
+            obj = storage.all(cls)[index]
+            storage.delete(obj)
+            storage.save()
         pass
 
     def update(self, obj, attr, val, val_type=None):
@@ -247,7 +238,7 @@ class HBNBCommand(cmd.Cmd):
         if attrib_type not in [str, int, float]:
             return None
         setattr(obj, attr, attrib_type(val))
-        obj.save()
+        # obj.save()
         pass
 
     def do_update(self, line):
@@ -275,19 +266,10 @@ class HBNBCommand(cmd.Cmd):
                     print('** value missing **')
                     return None
                 val = line[idx1:idx2]
-            obj = storage.all()[index]
+            cls = classes[index.split('.', 1)[0]]
+            obj = storage.all(cls)[index]
             self.update(obj, attr, val)
-            """
-            attrib_old = getattr(obj, attr, None)
-            if attrib_old is None:
-                attrib_type = str
-            else:
-                attrib_type = type(attrib_old)
-            if attrib_type not in [str, int, float]:
-                return None
-            setattr(obj, attr, attrib_type(val))
             obj.save()
-            """
         pass
 
     def update_from_dict(self, cls_name, id, attr_dict):
@@ -301,6 +283,7 @@ class HBNBCommand(cmd.Cmd):
             print('** attribute name missing **')
             return None
 
+        cls = classes[index.split('.', 1)[0]]
         obj = storage.all()[index]
         for update in updates:
             key_val = update.strip().split(":")
@@ -315,6 +298,7 @@ class HBNBCommand(cmd.Cmd):
             value = key_val[1].strip().strip('\'"')
             self.update(obj, name, value)
             # self.do_update(f'{cls_name} {id} {name} "{value}"')
+        obj.save()
 
     def help_all(self):
         """Help function for do_show()"""
