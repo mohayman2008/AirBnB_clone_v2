@@ -68,6 +68,7 @@ def deploy():
         return False
     return (do_deploy(path))
 
+
 def rm_remote_directories(dir_list):
     '''Deletes remote directories'''
 
@@ -78,7 +79,7 @@ def rm_remote_directories(dir_list):
 def do_clean(number=0):
     '''Deletes out-of-date archives'''
     files = local('ls -t1 versions/web_static_*.tgz', capture=True).split('\n')
- 
+
     number = int(number)
     if number >= len(files):
         return
