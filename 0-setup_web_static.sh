@@ -27,16 +27,17 @@ echo 'AirBnB clone' > /data/web_static/releases/test/index.html
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/'
 CONF_FILE='/etc/nginx/sites-available/default'
-rule_blk=\
-'	location /hbnb_static/ {\
-		alias /data/web_static/current/;\
-	}'
-rule='	alias /data/web_static/current/;\n'
-if [ "$(grep -c -E '^\s*location\s*/hbnb_static/\s*{[ \t]*$' "$CONF_FILE")" -eq 0 ]; then
-	sudo sed -z -E -i 's@(\n?([ \t]*)location\s*/\s*\{[^}]*\})@\1\n\n'"$rule_blk@" "$CONF_FILE"
-else
-	sudo sed -z -E -i 's@(\n?([ \t])*location\s*/hbnb_static/\s*\{)[^}]*\}@\1\n\2'"$rule"'\2\}@' "$CONF_FILE"
-fi
+sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' "$CONF_FILE"
+# rule_blk=\
+# '	location /hbnb_static/ {\
+# 		alias /data/web_static/current/;\
+# 	}'
+# rule='	alias /data/web_static/current/;\n'
+# if [ "$(grep -c -E '^\s*location\s*/hbnb_static/\s*{[ \t]*$' "$CONF_FILE")" -eq 0 ]; then
+# 	sudo sed -z -E -i 's@(\n?([ \t]*)location\s*/\s*\{[^}]*\})@\1\n\n'"$rule_blk@" "$CONF_FILE"
+# else
+# 	sudo sed -z -E -i 's@(\n?([ \t])*location\s*/hbnb_static/\s*\{)[^}]*\}@\1\n\2'"$rule"'\2\}@' "$CONF_FILE"
+# fi
 
 # Make sure that default configuration is enabled 
 sudo ln -sf "$CONF_FILE" /etc/nginx/sites-enabled/default
