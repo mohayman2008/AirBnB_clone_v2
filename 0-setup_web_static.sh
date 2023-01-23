@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Bash script that sets up the web servers for the deployment of web_static
+
 # shellcheck disable=SC1004
+
 
 # Install Nginx if it not already installed
 sudo apt-get update && sudo apt-get -y install nginx
 # nginx -v || (sudo apt-get update && sudo apt-get -y install nginx)
+sudo ufw allow 'Nginx HTTP'
 
 # Create the directories tree
 sudo mkdir -p '/data/web_static/releases/test/'
@@ -14,7 +17,7 @@ sudo mkdir -p '/data/web_static/shared/'
 sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
 # Manage the ownership of '/data' directory and all its contents
-sudo chown -hR 'ubuntu':'ubuntu' '/data'
+sudo chown -hR 'ubuntu':'ubuntu' '/data/'
 
 # Create a test index.html
 echo 'AirBnB clone' > /data/web_static/releases/test/index.html
@@ -38,3 +41,5 @@ sudo ln -sf "$CONF_FILE" /etc/nginx/sites-enabled/default
 
 # Restart Nginx service 
 sudo service nginx restart
+
+exit 0
