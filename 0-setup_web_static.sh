@@ -5,7 +5,8 @@
 
 
 # Install Nginx if it not already installed
-sudo apt-get update && sudo apt-get -y install nginx
+sudo apt-get update
+sudo apt-get -y install nginx
 # nginx -v || (sudo apt-get update && sudo apt-get -y install nginx)
 sudo ufw allow 'Nginx HTTP'
 
