@@ -3,17 +3,18 @@
 # shellcheck disable=SC1004
 
 # Install Nginx if it not already installed
-nginx -v || (sudo apt-get update && sudo apt-get -y install nginx)
+sudo apt-get update && sudo apt-get -y install nginx
+# nginx -v || (sudo apt-get update && sudo apt-get -y install nginx)
 
 # Create the directories tree
-mkdir -p '/data/web_static/releases/test/'
-mkdir -p '/data/web_static/shared/'
+sudo mkdir -p '/data/web_static/releases/test/'
+sudo mkdir -p '/data/web_static/shared/'
 
 # Deploy the current test realease
-ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
+sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
 # Manage the ownership of '/data' directory and all its contents
-sudo chown -R 'ubuntu':'ubuntu' '/data'
+sudo chown -hR 'ubuntu':'ubuntu' '/data'
 
 # Create a test index.html
 echo 'AirBnB clone' > /data/web_static/releases/test/index.html
