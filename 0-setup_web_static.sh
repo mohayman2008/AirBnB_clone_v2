@@ -14,6 +14,7 @@ sudo mkdir -p '/data/web_static/releases/test/'
 sudo mkdir -p '/data/web_static/shared/'
 
 # Deploy the current test realease
+sudo rm -f '/data/web_static/current'
 sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
 # Manage the ownership of '/data' directory and all its contents
