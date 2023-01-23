@@ -17,11 +17,11 @@ def do_pack():
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
     directory = 'versions'
     filename = 'web_static_' + timestamp + '.tgz'
-    path = f'{directory}/{filename}'
+    path = '{}/{}'.format(directory, filename)
 
-    local(f'mkdir -p {directory}')
+    local('mkdir -p {}'.format(directory))
 
-    if (local(f'tar -cvzf {directory}/{filename} web_static').failed):
+    if (local('tar -cvzf {} web_static'.format(path)).failed):
         return None
     return path
 
@@ -31,7 +31,8 @@ def set_up():
     "0-setup_web_static.sh" bash script'''
 
     put('0-setup_web_static.sh', mirror_local_mode=True)
-    code = sudo('./0-setup_web_static.sh').return_code
+    # code = sudo('./0-setup_web_static.sh').return_code
+    code = run('./0-setup_web_static.sh').return_code
     run('rm -f 0-setup_web_static.sh')
 
-    print(f'Set up script was run and exited with exit code {code}\n')
+    print('Set up script was run and exited with exit code {}\n'.format(code))

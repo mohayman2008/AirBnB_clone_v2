@@ -3,7 +3,7 @@
 # shellcheck disable=SC1004
 
 # Install Nginx if it not already installed
-nginx -v || (apt-get update && apt-get -y install nginx)
+nginx -v || (sudo apt-get update && sudo apt-get -y install nginx)
 
 # Create the directories tree
 mkdir -p '/data/web_static/releases/test/'
@@ -13,7 +13,7 @@ mkdir -p '/data/web_static/shared/'
 ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
 # Manage the ownership of '/data' directory and all its contents
-chown -R 'ubuntu':'ubuntu' '/data'
+sudo chown -R 'ubuntu':'ubuntu' '/data'
 
 # Create a test index.html
 echo 'AirBnB clone' > /data/web_static/releases/test/index.html
@@ -27,13 +27,13 @@ rule_blk=\
 	}'
 rule='	alias /data/web_static/current/;\n'
 if [ "$(grep -c -E '^\s*location\s*/hbnb_static/\s*{[ \t]*$' "$CONF_FILE")" -eq 0 ]; then
-	sed -z -E -i 's@(\n?([ \t]*)location\s*/\s*\{[^}]*\})@\1\n\n'"$rule_blk@" "$CONF_FILE"
+	sudo sed -z -E -i 's@(\n?([ \t]*)location\s*/\s*\{[^}]*\})@\1\n\n'"$rule_blk@" "$CONF_FILE"
 else
-	sed -z -E -i 's@(\n?([ \t])*location\s*/hbnb_static/\s*\{)[^}]*\}@\1\n\2'"$rule"'\2\}@' "$CONF_FILE"
+	sudo sed -z -E -i 's@(\n?([ \t])*location\s*/hbnb_static/\s*\{)[^}]*\}@\1\n\2'"$rule"'\2\}@' "$CONF_FILE"
 fi
 
 # Make sure that default configuration is enabled 
-ln -sf "$CONF_FILE" /etc/nginx/sites-enabled/default
+sudo ln -sf "$CONF_FILE" /etc/nginx/sites-enabled/default
 
 # Restart Nginx service 
-service nginx restart
+sudo service nginx restart
