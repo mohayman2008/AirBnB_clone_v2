@@ -16,12 +16,28 @@ exec { 'add nginx firewall rule':
 }
 ####
 
+# Manage the ownership of '/data' directory and all its contents
+file { '/data':
+  ensure  => directory,
+  recurse => true,
+  owner   => 'ubuntu',
+  group   => 'ubuntu'
+}
+
 # Create the directories tree
-file { '/data/web_static/releases/test/':
+file { '/data/web_static':
+  ensure => directory
+}
+
+file { '/data/web_static/releases':
   ensure => directory
 }
 
 file { '/data/web_static/shared/':
+  ensure => directory
+}
+
+file { '/data/web_static/releases/test':
   ensure => directory
 }
 ####
@@ -30,21 +46,13 @@ file { '/data/web_static/shared/':
 file { 'create current symlink':
   ensure => link,
   path   => '/data/web_static/current',
-  target => '/data/web_static/releases/test/'
-}
-
-# Manage the ownership of '/data' directory and all its contents
-file { '/data/':
-  ensure  => directory,
-  recurse => true,
-  owner   => 'ubuntu',
-  group   => 'ubuntu'
+  target => '/data/web_static/releases/test'
 }
 
 # Create a test index.html
 file { '/data/web_static/releases/test/index.html':
   ensure  => present,
-  content => 'AirBnB clone'
+  content => "AirBnB clone\n"
 }
 # exec { 'create index.html':
 #   command => 'echo "AirBnB clone" > /data/web_static/releases/test/index.html',
