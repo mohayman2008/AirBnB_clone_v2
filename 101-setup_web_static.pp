@@ -32,7 +32,7 @@ exec {'create second directory':
 
 exec {'content into html':
   provider => shell,
-  command  => 'echo "Holberton School" | sudo tee /data/web_static/releases/test/index.html',
+  command  => 'echo "AirBnB clone\n" | sudo tee /data/web_static/releases/test/index.html',
   before   => Exec['symbolic link'],
 }
 
@@ -49,15 +49,40 @@ exec {'put location':
   before   => Exec['restart Nginx'],
 }
 
-exec {'restart Nginx':
-  provider => shell,
-  command  => 'sudo service nginx restart',
-  before   => File['/data/']
-}
-
 file {'/data/':
   ensure  => directory,
   owner   => 'ubuntu',
   group   => 'ubuntu',
   recurse => true,
+  before   => Exec['restart Nginx']
+}
+
+exec { 'nginx config':
+  path     => $path,
+  provider => shell,
+  before   => Exec['restart Nginx'],
+  require  => Exec['install Nginx'],
+  command  => 'bash -c \'
+CONF_FILE=/etc/nginx/sites-available/default
+rule_blk="\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}"
+rule="\talias /data/web_static/current/;\n"
+if [ "$(grep -c -E "^\\\\s*location\\\\s*/hbnb_static/\\\\s*{[ \\\\t]*$" "$CONF_FILE")" -eq 0 ]; then
+	sudo sed -z -E -i "s@(\\\\n?([ \\\\t]*)location\\\\s*/\\\\s*\\\\{[^}]*\\\\})@\\\\1\\\\n\\\\n$rule_blk@" "$CONF_FILE"
+else
+	sudo sed -z -E -i "s@(\\\\n?([ \\\\t])*location\\\\s*/hbnb_static/\\\\s*\\\\{)[^}]*\\\\}@\\\\1\\\\n\\\\2$rule\\\\2\}@" "$CONF_FILE"
+fi
+  \''
+}
+
+# Make sure that default configuration is enabled
+file { '/etc/nginx/sites-enabled/default':
+  ensure => link,
+  target => '/etc/nginx/sites-available/default',
+  require  => Exec['install Nginx']
+}
+
+exec {'restart Nginx':
+  provider => shell,
+  command  => 'sudo service nginx restart',
+  require  => Exec['install Nginx'],
 }
