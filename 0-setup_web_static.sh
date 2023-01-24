@@ -8,23 +8,23 @@ sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Create the directories tree
-sudo mkdir -p '/data/web_static/releases/test/'
-sudo mkdir -p '/data/web_static/shared/'
+sudo mkdir -p '/data/web_static/releases/test'
+sudo mkdir -p '/data/web_static/shared'
 
 # Deploy the current test realease
-sudo rm -f '/data/web_static/current'
+sudo rm -rf '/data/web_static/current'
 sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
-
-# Manage the ownership of '/data' directory and all its contents
-sudo chown -hR 'ubuntu':'ubuntu' '/data/'
 
 # Create a test index.html
 echo 'AirBnB clone' > /data/web_static/releases/test/index.html
 
+# Manage the ownership of '/data' directory and all its contents
+sudo chown -hR 'ubuntu':'ubuntu' '/data'
+
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/'
-CONF_FILE='/etc/nginx/sites-available/default'
-sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' "$CONF_FILE"
+# CONF_FILE='/etc/nginx/sites-available/default'
+sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' '/etc/nginx/sites-available/default'
 # rule_blk=\
 # '	location /hbnb_static/ {\
 # 		alias /data/web_static/current/;\
@@ -37,9 +37,7 @@ sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/
 # fi
 
 # Make sure that default configuration is enabled 
-sudo ln -sf "$CONF_FILE" /etc/nginx/sites-enabled/default
+sudo ln -sf '/etc/nginx/sites-available/default' /etc/nginx/sites-enabled/default
 
 # Restart Nginx service 
 sudo service nginx restart
-
-exit 0
