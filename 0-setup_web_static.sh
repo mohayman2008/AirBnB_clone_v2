@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Bash script that sets up the web servers for the deployment of web_static
+# shellcheck disable=SC1004
 
 # Install Nginx if it not already installed
 sudo apt-get update
