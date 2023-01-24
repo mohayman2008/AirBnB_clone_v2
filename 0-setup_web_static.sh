@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Bash script that sets up the web servers for the deployment of web_static
-# shellcheck disable=SC1004
 
 # Install Nginx if it not already installed
 sudo apt-get update
@@ -26,10 +25,7 @@ sudo chown -hR 'ubuntu':'ubuntu' '/data'
 # + to location '/hbnb_static/'
 CONF_FILE='/etc/nginx/sites-available/default'
 # sudo sed -i '38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' '/etc/nginx/sites-available/default'
-rule_blk=\
-'	location /hbnb_static/ {\
-		alias /data/web_static/current/;\
-	}'
+rule_blk='\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}'
 rule='	alias /data/web_static/current/;\n'
 if [ "$(grep -c -E '^\s*location\s*/hbnb_static/\s*{[ \t]*$' "$CONF_FILE")" -eq 0 ]; then
 	sudo sed -z -E -i 's@(\n?([ \t]*)location\s*/\s*\{[^}]*\})@\1\n\n'"$rule_blk@" "$CONF_FILE"
