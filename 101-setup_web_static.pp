@@ -10,8 +10,9 @@ package { 'nginx':
 }
 
 exec { 'add nginx firewall rule':
-  command => 'ufw allow \'Nginx HTTP\'',
-  path    => $path
+  provider => shell,
+  command  => 'ufw allow \'Nginx HTTP\'',
+  path     => $path
 }
 ####
 
@@ -41,21 +42,26 @@ file { '/data/':
 }
 
 # Create a test index.html
-exec { 'create index.html':
-  command => 'echo "AirBnB clone" > /data/web_static/releases/test/index.html',
-  path    => $path
+file { '/data/web_static/releases/test/index.html':
+  ensure  => present,
+  content => 'AirBnB clone'
 }
+# exec { 'create index.html':
+#   command => 'echo "AirBnB clone" > /data/web_static/releases/test/index.html',
+#   path    => $path
+# }
 
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/' '\''
 exec { 'nginx config':
-  path    => $path,
-  notify  => Service['nginx'],
-  command => 'bash -c \'
+  path     => $path,
+  provider => shell,
+  notify   => Service['nginx'],
+  command  => 'bash -c \'
 CONF_FILE=/etc/nginx/sites-available/default
 rule_blk="\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}"
 rule="\talias /data/web_static/current/;\n"
-if [ "$(grep -c -E "^\s*location\s*/hbnb_static/\s*{[ \t]*$" "$CONF_FILE")" -eq 0 ]; then
+if [ "$(grep -c -E "^\\\\s*location\\\\s*/hbnb_static/\\\\s*{[ \\\\t]*$" "$CONF_FILE")" -eq 0 ]; then
 	sudo sed -z -E -i "s@(\\\\n?([ \\\\t]*)location\\\\s*/\\\\s*\\\\{[^}]*\\\\})@\\\\1\\\\n\\\\n$rule_blk@" "$CONF_FILE"
 else
 	sudo sed -z -E -i "s@(\\\\n?([ \\\\t])*location\\\\s*/hbnb_static/\\\\s*\\\\{)[^}]*\\\\}@\\\\1\\\\n\\\\2$rule\\\\2\}@" "$CONF_FILE"
