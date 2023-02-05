@@ -17,10 +17,22 @@ def hbnb():
     return 'HBNB'
 
 
-@app.route('/c/<text>')
-def c_is_fun(text):
-    '''Display “C is <text>” for "/c/<text>" route'''
+@app.route('/c/<text>', strict_slashes=False)
+def c_text(text):
+    '''Display “C <text>” for "/c/<text>" route'''
     return 'C {}'.format(text.replace('_', ' '))
+
+
+@app.route('/python/', strict_slashes=False)
+def python_is_cool():
+    '''Display “Python is cool” for "/python" route'''
+    return 'Python is cool'
+
+
+@app.route('/python/<text>', strict_slashes=False)
+def python_text(text):
+    '''Display “Python <text>” for "/python/<text>" route'''
+    return 'Python {}'.format(text.replace('_', ' '))
 
 
 if __name__ == "__main__":
