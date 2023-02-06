@@ -25,8 +25,8 @@ class State(BaseModel, Base):
             """
             from . import storage
             the_list = []
-            for city in storage.all(City):
-                state_id = getattr(city, state_id, None)
+            for city in storage.all(City).values():
+                state_id = getattr(city, "state_id", None)
                 if state_id is not None and state_id == self.id:
                     the_list.append(city)
             return the_list
