@@ -83,4 +83,8 @@ class DBStorage:
         cls = classes[cls_name]
         obj = self.__session.query(cls).filter(cls.id == id)
         self.__session.delete(obj)
+
+    def close(self):
+        '''Reload the objects from the database'''
+        self.__session.close()
     pass
