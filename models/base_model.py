@@ -64,9 +64,9 @@ class BaseModel:
         new_dict = dict(self.__dict__)
         if '_sa_instance_state' in new_dict.keys():
             del (new_dict['_sa_instance_state'])
-        return f"[{self.__class__.__name__}] ({self.id}) {new_dict}"
-        # return "[{}] ({}) {}".format(self.__class__.__name__,
-        #                              self.id, new_dict)
+        # return f"[{self.__class__.__name__}] ({self.id}) {new_dict}"
+        return "[{}] ({}) {}".format(self.__class__.__name__,
+                                     self.id, new_dict)
 
     def save(self):
         """Updates self.updated_at with the current datetime"""
