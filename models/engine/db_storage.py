@@ -31,7 +31,9 @@ class DBStorage:
         host = getenv('HBNB_MYSQL_HOST')
         db = getenv('HBNB_MYSQL_DB')
         CHARSET = 'latin1'
-        url = f'mysql+mysqldb://{user}:{pwd}@{host}/{db}?charset={CHARSET}'
+        url = 'mysql+mysqldb://{}:{}@{}/{}?charset={}'.format(user, pwd, host,
+                                                              db, CHARSET)
+        # url = f'mysql+mysqldb://{user}:{pwd}@{host}/{db}?charset={CHARSET}'
         self.__engine = create_engine(url, pool_pre_ping=True,
                                       encoding=CHARSET)
 
