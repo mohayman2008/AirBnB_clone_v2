@@ -13,43 +13,21 @@ class State(BaseModel, Base):
     """Class represensts a State"""
 
     __tablename__ = 'states'
+    name = ''
     if storage_type == 'db':
         name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state',
+        cities = relationship('City', back_populates='state',
                               cascade='all, delete, delete-orphan')
     else:
-        name = ''
-
         @property
         def cities(self):
-            '''returns the list of City instances with state_id
-                equals the current State.id
-                FileStorage relationship between State and City
-            '''
-            from models import storage
-            related_cities = []
-            cities = storage.all(City)
-            for city in cities.values():
-                if city.state_id == self.id:
-                    related_cities.append(city)
-            return related_cities
-
-    # __tablename__ = 'states'
-    # name = ''
-    # if storage_type == 'db':
-    #     name = Column(String(128), nullable=False)
-    #     cities = relationship('City', back_populates='state',
-    #                           cascade='all, delete, delete-orphan')
-    # else:
-    #     @property
-    #     def cities(self):
-    #         """Returns a list of the cities that belongs to the current state
-    #         """
-    #         from . import storage
-    #         the_list = []
-    #         for city in storage.all(City).values():
-    #             state_id = getattr(city, "state_id", None)
-    #             if state_id is not None and state_id == self.id:
-    #                 the_list.append(city)
-    #         return the_list
-    # pass
+            """Returns a list of the cities that belongs to the current state
+            """
+            from . import storage
+            the_list = []
+            for city in storage.all(City).values():
+                state_id = getattr(city, "state_id", None)
+                if state_id is not None and state_id == self.id:
+                    the_list.append(city)
+            return the_list
+    pass
