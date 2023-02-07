@@ -13,13 +13,18 @@ import models
 # storage = ''
 
 Base = declarative_base()
+Base.__table_args__ = {
+        "mysql_default_charset": "latin1"
+    }
 
 
 class BaseModel:
     """The base model for all the objects of the app"""
 
+    # id = Column(String(60), primary_key=True, default=str(uuid4()),
+    #             nullable=False, unique=True)
     id = Column(String(60), primary_key=True, default=str(uuid4()),
-                nullable=False, unique=True)
+                nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
     # id = Column(String(60), primary_key=True, nullable=False, unique=True)

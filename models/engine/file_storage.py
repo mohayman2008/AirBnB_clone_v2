@@ -68,7 +68,7 @@ class FileStorage:
         del self.__objects[index]
         self.save()
 
-    def close(self):
+    def close(self, *args, **kwargs):
         '''Reload the objects from the JSON file'''
         self.reload()
         pass

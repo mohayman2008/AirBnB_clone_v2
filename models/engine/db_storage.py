@@ -30,8 +30,10 @@ class DBStorage:
         pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
         db = getenv('HBNB_MYSQL_DB')
-        url = f'mysql+mysqldb://{user}:{pwd}@{host}/{db}'
-        self.__engine = create_engine(url, pool_pre_ping=True)
+        CHARSET = 'latin1'
+        url = f'mysql+mysqldb://{user}:{pwd}@{host}/{db}?charset={CHARSET}'
+        self.__engine = create_engine(url, pool_pre_ping=True,
+                                      encoding=CHARSET)
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -84,7 +86,7 @@ class DBStorage:
         obj = self.__session.query(cls).filter(cls.id == id)
         self.__session.delete(obj)
 
-    def close(self):
+    def close(self, *args, **kwargs):
         '''Reload the objects from the database'''
         self.__session.close()
     pass
