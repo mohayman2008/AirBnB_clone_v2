@@ -102,7 +102,7 @@ class HBNBCommand(cmd.Cmd):
             if id:
                 args = ' ' + id + args
 
-            line = f'{_cmd} {cls_name}{args}'
+            line = '{} {}{}'.format(_cmd, cls_name, args)
             return cmd.Cmd.onecmd(self, line)
 
     def do_EOF(self, line):
@@ -297,7 +297,7 @@ class HBNBCommand(cmd.Cmd):
             name = key_val[0].strip().strip('\'"')
             value = key_val[1].strip().strip('\'"')
             self.update(obj, name, value)
-            # self.do_update(f'{cls_name} {id} {name} "{value}"')
+            # self.do_update('{} {} {} "{}"'.format(cls_name, id, name, value))
         obj.save()
 
     def help_all(self):
