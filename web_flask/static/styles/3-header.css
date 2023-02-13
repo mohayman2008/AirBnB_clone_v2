@@ -12,5 +12,5 @@ header .logo {
     width: 142px;
     margin-left: 20px;
     vertical-align: middle;
-    background-image: url("../images/logo.png");
+    background-image: url("/static/images/logo.png");
 }
