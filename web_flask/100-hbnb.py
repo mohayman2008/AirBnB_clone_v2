@@ -24,6 +24,4 @@ def storage_close(exception):
 
 
 if __name__ == "__main__":
-    # for place in storage.all(Place).values():
-    #     print(f'Place: {place.name}, user_first_name: {place.user.first_name}, user_last_name: {place.user.last_name}')
     app.run(host='0.0.0.0', port=5000)

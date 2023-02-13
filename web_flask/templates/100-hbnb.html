@@ -1,79 +1,80 @@
-<!Doctype html>
-<html lang="EN">
-	<head>
-		<meta charset="utf-8">
-		<title>AirBnB Clone</title>
-		<link rel="icon" type="image/png" href="/static/images/icon.png">
-		<link rel="stylesheet" href="/static/styles/4-common.css">
-		<link rel="stylesheet" href="/static/styles/3-header.css">
-		<link rel="stylesheet" href="/static/styles/3-footer.css">
-    <link rel="stylesheet" href="/static/styles/100-filters.css">
-		<link rel="stylesheet" href="/static/styles/8-places.css">
-	</head>
-  <body>
-    <header>
-      <div class="logo"></div>
-    </header>
+<!DOCTYPE html>
+<HTML lang="EN">
+	<HEAD>
+		<META charset="utf-8">
+		<TITLE>AirBnB Clone</TITLE>
+		<LINK rel="icon" type="image/png" href="/static/images/icon.png">
+		<LINK rel="stylesheet" href="/static/styles/4-common.css">
+		<LINK rel="stylesheet" href="/static/styles/3-header.css">
+		<LINK rel="stylesheet" href="/static/styles/3-footer.css">
+		<LINK rel="stylesheet" href="/static/styles/100-filters.css">
+    <LINK rel="stylesheet" href="/static/styles/8-places.css">
+	</HEAD>
+	<BODY>
+		<HEADER>
+			<DIV class="logo"></DIV>
+		</HEADER>
 
-    <div class="container">
-      <section class="filters">
-        <div class="locations">
-					<h3>States</h3>
-					<h4>&nbsp;</h4>
-					<ul class="popover">
+		<DIV class="container">
+			<SECTION class="filters">
+				<DIV class="locations">
+					<H3>States</H3>
+					<H4>&nbsp;</H4>
+					<UL class="popover">
             {% for state in states|sort(case_sensitive=True, attribute='name') %}
-              <li>
-                <h2>{{ state.name }}</h2>
-                <ul>
+              <LI>
+                <H2>{{ state.name }}</H2>
+                <UL>
                   {% for city in state.cities|sort(case_sensitive=True, attribute='name') %}
-                    <li>{{ city.name }}</li>
+                    <LI>{{ city.name }}</LI>
                   {% endfor %}  
-                </ul>
-              </li>
+                </UL>
+              </LI>
             {% endfor %}
-					</ul>
-				</div>
+					</UL>
+				</DIV>
 
-				<div class="amenities">
-					<h3>Amenities</h3>
-					<h4>&nbsp;</h4>
-					<ul class="popover">
+				<DIV class="amenities">
+					<H3>Amenities</H3>
+					<H4>&nbsp;</H4>
+					<UL class="popover">
 						{% for amenity in amenities|sort(case_sensitive=True, attribute='name') %}
-              <li>{{ amenity.name }}</li>
+              <LI>{{ amenity.name }}</LI>
             {% endfor %}
-					</ul>
-				</div>
-        <button class="search-btn">Search</button>
-      </section>
-      <section class="places">
-        <h1>Places</h1>
-        {% for place in places|sort(case_sensitive=True, attribute='name') %}
-        <article>
-          <h2>{{ place.name }}</h2>
-          <div class="price_by_night">${{ place.price_by_night }}</div>
-          <div class="information">
-            <div class="max_guest">
-              <div class="icon"></div>
-              <div class="center">{{ place.max_guest }} Guest</div>
-            </div>
-            <div class="number_rooms">
-              <div class="icon"></div>
-              <div class="center">{{ place.number_rooms }} Room</div>
-            </div>
-            <div class="number_bathrooms">
-              <div class="icon"></div>
-              <div class="center">{{ place.number_bathrooms }} Bathroom</div>
-            </div>
-          </div>
-          <div class="user"><strong>Owner: </strong>{{ place.user.first_name }} {{ place.user.last_name }}</div>
-          <div class="description">{{ place.description|safe }}</div>
-        </article>
-        {% endfor %}
-      </section>
-    </div>
+					</UL>
+				</DIV>
+				<BUTTON class="search-btn">Search</BUTTON>
+			</SECTION>
 
-    <footer>
-      <span>Best School</span>
-    </footer>
-  </body>
-</html>
+      <SECTION class="places">
+        <H1>Places</H1>
+        {% for place in places|sort(case_sensitive=True, attribute='name') %}
+        <ARTICLE>
+          <H2>{{ place.name }}</H2>
+          <DIV class="price_by_night">${{ place.price_by_night }}</DIV>
+          <DIV class="information">
+            <DIV class="max_guest">
+              <DIV class="icon"></DIV>
+              <DIV class="center">{{ place.max_guest }} Guest</DIV>
+            </DIV>
+            <DIV class="number_rooms">
+              <DIV class="icon"></DIV>
+              <DIV class="center">{{ place.number_rooms }} Room</DIV>
+            </DIV>
+            <DIV class="number_bathrooms">
+              <DIV class="icon"></DIV>
+              <DIV class="center">{{ place.number_bathrooms }} Bathroom</DIV>
+            </DIV>
+          </DIV>
+          <DIV class="user"><STRONG>Owner: </STRONG>{{ place.user.first_name }} {{ place.user.last_name }}</DIV>
+          <DIV class="description">{{ place.description|safe }}</DIV>
+        </ARTICLE>
+        {% endfor %}
+      </SECTION>
+		</DIV>
+
+		<FOOTER>
+			<SPAN>Best School</SPAN>
+		</FOOTER>
+	</BODY>
+</HTML>
