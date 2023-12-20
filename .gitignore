@@ -1,0 +1,12 @@
+*~
+*.json
+__pycache__
+main.py
+style.sh
+run_tests
+test
+extra
+*(backup)*
+test_code*
+versions
+fix
