@@ -21,7 +21,7 @@ class HBNBCommand(cmd.Cmd):
         if not sys.stdin.isatty():
             self.use_rawinput = False
         cmd.Cmd.__init__(self)
-        self.fmt_re = re.compile(r'^[A-Za-z]*\.\w+(.*)$')
+        self.fmt_re = re.compile(r'^[A-Za-z]*\.\w+\(.*\)$')
 
         self.param_re = re.compile(r'^.+=.+$')
         self.str_re = re.compile(r'^"(\\\"|[^"])*(?<!\\)"$')

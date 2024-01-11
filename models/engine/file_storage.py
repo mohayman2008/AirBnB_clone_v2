@@ -60,6 +60,7 @@ class FileStorage:
             index = '.'.join((cls_name, id))
             if index in self.__objects.keys():
                 del self.__objects[index]
+                self.save()
         pass
 
     def remove(self, index):

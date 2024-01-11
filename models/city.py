@@ -4,24 +4,20 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from . import storage_type
-from .base_model import BaseModel, Base
-from .place import Place
-
 from . import base_model, storage_type
-# storage_type = "db"
+Base = base_model.Base
 
 
-class City(BaseModel, Base):
+class City(base_model.BaseModel, Base):
     """Class represensts a City"""
 
-    __tablename__ = 'cities'
-    name = ''
-    state_id = ''
-    if storage_type == 'db':
+    __tablename__ = "cities"
+
+    if storage_type == "db":
+        state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
         name = Column(String(128), nullable=False)
-        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
-        state = relationship('State', back_populates='cities')
-        places = relationship('Place', back_populates='cities',
-                              cascade='all, delete, delete-orphan')
+        state = relationship("State", back_populates="cities")
+    else:
+        state_id = ''
+        name = ''
     pass

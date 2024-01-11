@@ -6,6 +6,8 @@ from os import getenv
 storage_type = getenv("HBNB_TYPE_STORAGE")
 
 BaseModel = __import__('base_model', globals(), level=1).BaseModel
+# if "base_model" in globals():
+#     print("~~~~~~OK~~~~~~")
 Base = base_model.Base
 Amenity = __import__('amenity', globals(), level=1).Amenity
 City = __import__('city', globals(), level=1).City
