@@ -10,6 +10,7 @@ web1 = '52.91.120.176'
 web2 = '52.23.245.87'
 env.hosts = [web1, web2]
 
+
 @runs_once
 def do_pack():
     '''Packs the contents of the 'web_static' folder to a .tgz archive'''
