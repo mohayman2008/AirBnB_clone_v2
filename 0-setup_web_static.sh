@@ -2,7 +2,7 @@
 # Bash script that sets up the web servers for the deployment of web_static
 
 # Install Nginx if it not already installed
-if [ ! "$(nginxx -v && echo $?)" ]; then
+if [ ! "$(nginx -v && echo $?)" ]; then
 	sudo apt-get update
 	sudo apt-get -y install nginx
 fi
@@ -21,7 +21,15 @@ sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 sudo chown -hR 'ubuntu':'ubuntu' '/data'
 
 # Create a test index.html
-echo 'AirBnB clone' | sudo tee /data/web_static/releases/test/index.html
+dummy='<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>'
+
+echo "$dummy" | sudo tee /data/web_static/releases/test/index.html
 
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/'
