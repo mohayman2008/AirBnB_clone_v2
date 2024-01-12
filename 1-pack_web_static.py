@@ -4,6 +4,7 @@ the 'web_static' folder"""
 from datetime import datetime
 
 from fabric.api import env, local, run, sudo, put
+from fabric.decorators import runs_once
 
 env.user = 'ubuntu'
 web1 = '52.91.120.176'

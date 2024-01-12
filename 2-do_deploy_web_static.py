@@ -3,7 +3,7 @@
 from datetime import datetime
 import os
 
-from fabric.api import env, local, run, sudo, put
+from fabric.api import env, local, run, sudo, put, runs_once
 
 env.user = 'ubuntu'
 web1 = '52.91.120.176'
