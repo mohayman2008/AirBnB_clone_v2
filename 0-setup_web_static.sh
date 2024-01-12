@@ -13,10 +13,6 @@ sudo ufw allow 'Nginx HTTP'
 sudo mkdir -p '/data/web_static/releases/test'
 sudo mkdir -p '/data/web_static/shared'
 
-# Deploy the current test realease
-sudo rm -rf '/data/web_static/current'
-sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
-
 # Create a test index.html
 dummy='<html>
   <head>
@@ -27,6 +23,10 @@ dummy='<html>
 </html>'
 
 echo "$dummy" | sudo tee /data/web_static/releases/test/index.html
+
+# Deploy the current test realease
+sudo rm -rf '/data/web_static/current'
+sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
 # Manage the ownership of '/data' directory and all its contents
 sudo chown -hR 'ubuntu':'ubuntu' '/data'
