@@ -36,8 +36,9 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = self.created_at
 
-        self.__class__.storage = __import__('', globals(), fromlist=["storage"],
-                                 level=1).storage
+        self.__class__.storage = __import__('', globals(),
+                                            fromlist=["storage"],
+                                            level=1).storage
 
     def __str__(self):
         '''Returns the string represntation of the class instance'''

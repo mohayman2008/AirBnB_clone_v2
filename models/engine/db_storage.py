@@ -28,7 +28,7 @@ class DBStorage:
         db = getenv("HBNB_MYSQL_DB")
         # CHARSET = "latin1"
         CHARSET = "utf8mb4"
-        
+
         url = f"mysql+mysqldb://{user}:{pwd}@{host}/{db}?charset={CHARSET}"
         self.__engine = create_engine(url, pool_pre_ping=True,
                                       encoding="utf8")
@@ -70,5 +70,5 @@ class DBStorage:
         if obj:
             self.__session.delete(obj)
             self.save()
-        
+
     pass

@@ -19,8 +19,9 @@ class State(base_model.BaseModel, Base):
                               cascade="all, delete, delete-orphan")
     else:
         name = ''
+
         @property
-        def cities(self): 
+        def cities(self):
             all_cities = self.storage.all(City)
             cities = []
             for city in all_cities:
