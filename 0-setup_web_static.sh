@@ -17,9 +17,6 @@ sudo mkdir -p '/data/web_static/shared'
 sudo rm -rf '/data/web_static/current'
 sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 
-# Manage the ownership of '/data' directory and all its contents
-sudo chown -hR 'ubuntu':'ubuntu' '/data'
-
 # Create a test index.html
 dummy='<html>
   <head>
@@ -30,6 +27,9 @@ dummy='<html>
 </html>'
 
 echo "$dummy" | sudo tee /data/web_static/releases/test/index.html
+
+# Manage the ownership of '/data' directory and all its contents
+sudo chown -hR 'ubuntu':'ubuntu' '/data'
 
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/'
