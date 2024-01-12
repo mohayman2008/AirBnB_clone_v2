@@ -19,7 +19,7 @@ sudo ln -sf '/data/web_static/releases/test/' '/data/web_static/current'
 sudo chown -hR 'ubuntu':'ubuntu' '/data'
 
 # Create a test index.html
-echo 'AirBnB clone' > /data/web_static/releases/test/index.html
+sudo echo 'AirBnB clone' > /data/web_static/releases/test/index.html
 
 # Configure nginx to serve the contents of '/data/web_static/current/'
 # + to location '/hbnb_static/'
