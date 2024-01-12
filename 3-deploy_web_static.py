@@ -10,7 +10,7 @@ web1 = '52.91.120.176'
 web2 = '52.23.245.87'
 env.hosts = [web1, web2]
 
-
+@runs_once
 def do_pack():
     '''Packs the contents of the 'web_static' folder to a .tgz archive'''
 
@@ -59,15 +59,14 @@ def do_deploy(archive_path):
     return True
 
 
-@runs_once
 def deploy():
     '''Creates and Distributes an archive to the remote web servers'''
 
     path = do_pack()
     if path is None:
         return False
-    return execute(do_deploy, path)
-    # return (do_deploy(path))
+    # return execute(do_deploy, path)
+    return (do_deploy(path))
 
 
 def set_up():
