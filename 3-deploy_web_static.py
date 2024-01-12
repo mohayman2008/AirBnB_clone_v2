@@ -3,7 +3,7 @@
 from datetime import datetime
 import os
 
-from fabric.api import env, local, run, sudo, put, runs_once
+from fabric.api import env, local, run, sudo, put, runs_once, execute, hosts
 
 env.user = 'ubuntu'
 web1 = '52.91.120.176'
@@ -59,14 +59,15 @@ def do_deploy(archive_path):
     print('Deployed successfully.\n')
     return True
 
-
+@runs_once
 def deploy():
     '''Creates and Distributes an archive to the remote web servers'''
 
     path = do_pack()
     if path is None:
         return False
-    return (do_deploy(path))
+    return execute(do_deploy, path)
+    # return (do_deploy(path))
 
 
 def set_up():
