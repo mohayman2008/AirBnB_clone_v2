@@ -11,7 +11,6 @@ web2 = '52.23.245.87'
 env.hosts = [web1, web2]
 
 
-@runs_once
 def do_pack():
     '''Packs the contents of the 'web_static' folder to a .tgz archive'''
 
@@ -58,6 +57,7 @@ def do_deploy(archive_path):
 
     print('Deployed successfully.\n')
     return True
+
 
 @runs_once
 def deploy():
