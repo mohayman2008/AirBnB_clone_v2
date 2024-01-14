@@ -10,3 +10,5 @@ extra
 test_code*
 versions
 fix
+*py.1
+*py.backup

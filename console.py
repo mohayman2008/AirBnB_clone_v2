@@ -13,6 +13,8 @@ classes = engine.classes
 class HBNBCommand(cmd.Cmd):
     """The console class"""
 
+    valid_classes = classes.keys() ####
+
     l_c = ['create', 'show', 'update', 'all', 'destroy', 'count']
 
     def __init__(self, *args, **kwargs):

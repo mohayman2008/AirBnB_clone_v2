@@ -63,7 +63,7 @@ class DBStorage:
         """Creates all tables in the DB and creates the current DB session"""
         Base.metadata.create_all(self.__engine)
         Session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(Session)
+        self.__session = scoped_session(Session)()
 
     def delete(self, obj=None):
         """Deletes an object from the current DB session"""
