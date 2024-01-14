@@ -8,7 +8,7 @@ from fabric.api import env, local, run, sudo, put, runs_once, execute, hosts
 env.user = 'ubuntu'
 web1 = '52.91.120.176'
 web2 = '52.23.245.87'
-env.hosts = [web1, web2]
+env.hosts = ['localhost', web1, web2]
 
 
 @runs_once
