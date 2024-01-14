@@ -48,8 +48,8 @@ def do_deploy(archive_path):
     if (run('mv -f {0}web_static/* {0}'.format(remote_path)).failed):
         return False
 
-    if (run('rm -rf {}web_static/'.format(remote_path)).failed):
-        return False
+    # if (run('rm -rf {}web_static/'.format(remote_path)).failed):
+    #     return False
     if (run('rm -f /data/web_static/current').failed):
         return False
     command = 'ln -sf {} {}'.format(remote_path, '/data/web_static/current')
