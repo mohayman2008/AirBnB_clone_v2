@@ -22,8 +22,8 @@ class DBStorage:
 
     def __init__(self):
         """Inistantiate a new instance of the database storage engine class"""
-        user = quote_plus(getenv("HBNB_MYSQL_USER"))
-        pwd = quote_plus(getenv("HBNB_MYSQL_PWD"))
+        user = quote_plus(str(getenv("HBNB_MYSQL_USER")))
+        pwd = quote_plus(str(getenv("HBNB_MYSQL_PWD")))
         host = getenv("HBNB_MYSQL_HOST")
         db = getenv("HBNB_MYSQL_DB")
         # CHARSET = "latin1"
@@ -70,5 +70,9 @@ class DBStorage:
         if obj:
             self.__session.delete(obj)
             self.save()
+
+    def close(self, *args, **kwargs):
+        '''Closes the SQLAlechemy session'''
+        self.__session.close()
 
     pass
