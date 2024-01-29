@@ -31,9 +31,11 @@ class BaseModel:
                     setattr(self, key, datetime.fromisoformat(kwargs[key]))
                 else:
                     setattr(self, key, kwargs[key])
-        else:
+        if getattr(self, 'id') is None:
             self.id = str(uuid.uuid4())
+        if getattr(self, 'created_at') is None:
             self.created_at = datetime.now()
+        if getattr(self, 'updated_at') is None:
             self.updated_at = self.created_at
 
         self.__class__.storage = __import__('', globals(),

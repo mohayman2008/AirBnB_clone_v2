@@ -41,7 +41,7 @@ class DBStorage:
         objects = {}
 
         if cls is None:
-            obj_list = self.__session.query(*classes.values()).all()
+            obj_list = self.__session.query(classes.values()).all()
         elif cls not in classes.values():
             return {}
         obj_list = self.__session.query(cls).all()
