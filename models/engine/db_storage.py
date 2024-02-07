@@ -30,7 +30,8 @@ class DBStorage:
         # CHARSET = "latin1"
         CHARSET = "utf8mb4"
 
-        url = f"mysql+mysqldb://{user}:{pwd}@{host}/{db}?charset={CHARSET}"
+        url = "mysql+mysqldb://{}:{}@{}/{}?charset={}"
+        url = url.format(user, pwd, host, db, CHARSET)
         self.__engine = create_engine(url, pool_pre_ping=True,
                                       encoding="utf8")
 
