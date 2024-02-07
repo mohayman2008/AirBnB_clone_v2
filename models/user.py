@@ -1,14 +1,36 @@
 #!/usr/bin/python3
-"""This module contains the difinition of the User class"""
+""" manages class User"""
+import models
+from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from hashlib import md5
 
-from . import base_model
 
+class User(BaseModel, Base):
+    """Representation of a user """
+    if models.storage_type == 'db':
+        __tablename__ = 'users'
+        email = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
+        places = relationship("Place", backref="user")
+        reviews = relationship("Review", backref="user")
+    else:
+        email = ""
+        password = ""
+        first_name = ""
+        last_name = ""
 
-class User(base_model.BaseModel):
-    """Class represensts users"""
-
-    email = ''
-    password = ''
-    first_name = ''
-    last_name = ''
-    pass
+    def __init__(self, *args, **kwargs):
+        """initializes user"""
+        if args:
+            args[1] = md5(args[1].encode('utf8')).hexdigest()
+        if kwargs:
+            passwd = kwargs.pop('password', "")
+            encrypt_passwd = md5(passwd.encode('utf8')).hexdigest()
+            kwargs['password'] = encrypt_passwd
+        super().__init__(*args, **kwargs)
