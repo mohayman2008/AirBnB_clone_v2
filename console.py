@@ -14,7 +14,7 @@ class HBNBCommand(cmd.Cmd):
     """The console class"""
 
     # #### For QA checks ####
-    valid_classes = classes.keys()
+    # valid_classes = classes.keys()
 
     l_c = ['create', 'show', 'update', 'all', 'destroy', 'count']
 
@@ -181,7 +181,6 @@ class HBNBCommand(cmd.Cmd):
             self.update(obj, attr, val, val_type)
         obj.save()
         print(obj.id)
-        pass
 
     def do_all(self, line):
         '''Command processor for command "all"'''

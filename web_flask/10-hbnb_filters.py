@@ -13,6 +13,10 @@ def states_id(id=None):
      "Amenities" filters gets their data from the storage engine used,
     for "/hbnb_filters" route'''
     states = storage.all(State).values()
+    # print(storage.all()[:5])
+    print(storage.all(State).values())
+    print(storage.all(City).keys())
+    print(storage.all(Amenity).keys())
     amenities = storage.all(Amenity).values()
     return render_template('10-hbnb_filters.html', states=states,
                            amenities=amenities)

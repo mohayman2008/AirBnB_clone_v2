@@ -14,6 +14,7 @@ Base = declarative_base()
 class BaseModel:
     '''The base class for the classes of data in the AirBnB clone app
     '''
+    # if storage_type == "db":
     id = Column(String(60), primary_key=True, nullable=False,
                 default=str(uuid.uuid4()))
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
@@ -23,6 +24,15 @@ class BaseModel:
         '''The initializer method for BaseModel instances
         Rereates objects if kwargs is passed in and
         creates new ones elsewise'''
+        from . import storage
+        self.__class__.storage = storage
+
+        if not len(kwargs):
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
+            return
+
         if kwargs:
             for key in kwargs:
                 if key == "__class__":
@@ -35,12 +45,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
         if getattr(self, 'created_at') is None:
             self.created_at = datetime.now()
-        if getattr(self, 'updated_at') is None:
             self.updated_at = self.created_at
-
-        self.__class__.storage = __import__('', globals(),
-                                            fromlist=["storage"],
-                                            level=1).storage
 
     def __str__(self):
         '''Returns the string represntation of the class instance'''
@@ -58,10 +63,6 @@ class BaseModel:
         '''
         self.updated_at = datetime.now()
 
-        # storage = __import__('', globals(), fromlist=["storage"],
-        #                      level=1).storage
-        # storage.new(self)
-        # storage.save()
         self.storage.new(self)
         self.storage.save()
 
