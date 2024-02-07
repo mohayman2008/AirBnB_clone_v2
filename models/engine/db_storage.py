@@ -8,11 +8,12 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from urllib.parse import quote_plus
 
 from ..base_model import Base
-from . import classes
+from . import *
 
-classes = classes.copy()
-if classes.get("BaseModel"):
-    del classes["BaseModel"]
+classes = {"State": State, "City": City}
+# classes = classes.copy()
+# if classes.get("BaseModel"):
+#     del classes["BaseModel"]
 
 
 class DBStorage:
@@ -41,14 +42,17 @@ class DBStorage:
         objects = {}
 
         if cls is None:
-            obj_list = self.__session.query(classes.values()).all()
+            cls_list = classes.values()
         elif cls not in classes.values():
             return {}
-        obj_list = self.__session.query(cls).all()
+        else:
+            cls_list = [cls]
 
-        for obj in obj_list:
-            index = obj.__class__.__name__ + '.' + str(obj.id)
-            objects[index] = obj
+        for cls in cls_list:
+            obj_list = self.__session.query(cls).all()
+            for obj in obj_list:
+                index = obj.__class__.__name__ + '.' + str(obj.id)
+                objects[index] = obj
         return objects
 
     def new(self, obj):
