@@ -50,7 +50,7 @@
         <H1>Places</H1>
         {% for place in places|sort(case_sensitive=True, attribute='name') %}
         <ARTICLE>
-          <H2>{{ place.name }}</H2>
+          <H2>{{ place.name|safe }}</H2>
           <DIV class="price_by_night">${{ place.price_by_night }}</DIV>
           <DIV class="information">
             <DIV class="max_guest">
@@ -66,7 +66,7 @@
               <DIV class="center">{{ place.number_bathrooms }} Bathroom</DIV>
             </DIV>
           </DIV>
-          <DIV class="user"><STRONG>Owner: </STRONG>{{ place.user.first_name }} {{ place.user.last_name }}</DIV>
+          <DIV class="user"><STRONG>Owner: </STRONG>{{ place.user.first_name|safe }} {{ place.user.last_name|safe }}</DIV>
           <DIV class="description">{{ place.description|safe }}</DIV>
         </ARTICLE>
         {% endfor %}
